@@ -181,7 +181,7 @@ extension MapVC: MKMapViewDelegate {
                     if finished {
                         self.removeSpinner()
                         self.removeProgressLbl()
-                        //reload collectionView
+                        //reload collectionView after images retrieved to show updated collectionview
                         self.collectionView?.reloadData()
                     }
                 })
@@ -201,6 +201,7 @@ extension MapVC: MKMapViewDelegate {
         //imageURLArray = []
         
         Alamofire.request(flickrURL(forAPIKey: API_KEY, withAnnotation: annotation, andNumberOfPhotos: 40)).responseJSON { (response) in //reponse constant holds value of returned json
+            //not using SwiftyJSON to see how working with JSON is without it, at least have done it the other way and be exposed to it
             guard let json = response.result.value as? Dictionary<String, AnyObject> else { return }
             let photosDict = json["photos"] as! Dictionary<String, AnyObject>
             let photosDictArray = photosDict["photo"] as! [Dictionary<String, AnyObject>]
@@ -219,6 +220,7 @@ extension MapVC: MKMapViewDelegate {
         //imageArray = []
         
         for url in imageURLArray {
+            //Using AlamofireImage - added ability to handle direct image downloading via alamofire
             Alamofire.request(url).responseImage(completionHandler: { (response) in
                 guard let image = response.result.value else { return }
                 self.imageArray.append(image)
@@ -269,9 +271,10 @@ extension MapVC: UICollectionViewDelegate, UICollectionViewDataSource {
         return imageArray.count
     }
     
-    //insert dequeued photo into collectionView grid cell
+    //insert dequeued photos into collectionView grid cell by cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as? PhotoCell else { return UICollectionViewCell() }
+        //image at corresponding indexPath.row index from imageArray to be appeneded to grid cell in collectionview and appear
         let imageFromIndex = imageArray[indexPath.row] //creates cells for collectionView
         let imageView = UIImageView(image: imageFromIndex)
         cell.addSubview(imageView)

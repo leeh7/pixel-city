@@ -14,6 +14,7 @@
 -   Using 3rd Party API (Flickr) to retrieve content via web request made possible with Alamofire & AlamofireImage Cocoapods
 -   Using Alamofire & AlamofireImage Cocoapods
 -   Basic 3DTouch implementation for interaction with downloaded photos
+-   Parse JSON from Alamofire request response without use of SwiftyJSON
 
 
 ## Screenshots & Demo
